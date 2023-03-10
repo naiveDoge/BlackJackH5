@@ -2,6 +2,7 @@ import $ from 'jquery';
 import './poker.min.js';
 import 'bootstrap';
 
+//all cards
 var gameData = {
     'dealer': [],
     'player': []
@@ -13,6 +14,7 @@ $('#buttonStart').click(function(){
     gameInit();
 });
 
+//when starting a new round
 function gameInit() {
     gameData['dealer'] = [];
     gameData['dealer'].push(generateCard());
@@ -20,7 +22,15 @@ function gameInit() {
     addCardToDOM('dealersCards', gameData['dealer'][0]);
     
     //add a back of the card
-    $('#dealersCards').append(Poker.getBackCanvas(120, '#7A7BB8', '#2E319C'));
+    $('#dealersCards').append('<span id="dealersUnknownCard"></span>');
+    $('#dealersUnknownCard').append(Poker.getBackCanvas(120, '#7A7BB8', '#2E319C'));
+
+    //add player's cards
+    gameData['player'] = [];
+    gameData['player'].push(generateCard());
+    gameData['player'].push(generateCard());
+    addCardToDOM('playersCards', gameData['player'][0]);
+    addCardToDOM('playersCards', gameData['player'][1]);
 }
 
 function addCardToDOM(elementID, card) {
