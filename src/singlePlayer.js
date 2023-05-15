@@ -14,6 +14,10 @@ $('#buttonStart').click(function(){
     gameInit();
 });
 
+$('#buttonHit').click(function(){
+    hitCard('player');
+});
+
 //when starting a new round
 function gameInit() {
     gameData['dealer'] = [];
@@ -58,4 +62,9 @@ function getRandomInt(max) {
 function generateCardFace() {
     var faces = ['h', 'd', 's', 'c'];
     return faces[getRandomInt(4)];
+}
+
+function hitCard(target) {
+    gameData[target].push(generateCard());
+    addCardToDOM(target + 'sCards', gameData[target][gameData[target].length - 1]);
 }
