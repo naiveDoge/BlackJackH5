@@ -17,6 +17,11 @@ $('#buttonStart').click(function(){
 $('#buttonHit').click(function(){
     hitCard('player');
 });
+$('#buttonStand').click(function(){
+    $('#buttonStand').prop('disabled', true);
+    $('#buttonHit').prop('disabled', true);
+    dealerAction();
+});
 
 //when starting a new round
 function gameInit() {
@@ -51,7 +56,9 @@ function getCardFromNum(cardNum) {
     cardNum = cardNum.replace('11', 'J');
     cardNum = cardNum.replace('12', 'Q');
     cardNum = cardNum.replace('13', 'K');
-    cardNum = cardNum.replace('1', 'A');
+    if (cardNum == '1') {
+        cardNum = 'A';
+    }
     return cardNum;
 }
 
@@ -67,4 +74,40 @@ function generateCardFace() {
 function hitCard(target) {
     gameData[target].push(generateCard());
     addCardToDOM(target + 'sCards', gameData[target][gameData[target].length - 1]);
+}
+
+//Dealer related functions
+
+function dealerAction() {
+    //First remove the hidden card and add its real card
+    $('#dealersUnknownCard').remove();
+    addCardToDOM('dealersCards', gameData['dealer'][1]);
+    //Then add cards for dealer
+    while(true) {
+        if(sumForCards(gameData['dealer']) > 26) {
+            break;
+        } else {
+            hitCard('dealer');
+        }
+    }
+    //Finally get the winner
+    if (sumForCards(gameData['dealer']) < sumForCards(gameData['player'])) {
+        alert('u win!');
+    } else if (sumForCards(gameData['dealer']) > sumForCards(gameData['player'])) {
+        alert('u lose!');
+    } else {
+        alert('tie');
+    }
+}
+
+function sumForCards(cards) {
+    sum = 0;
+    for(var i=0; i<cards.length; i++) {
+        if(cards[i]>10) {
+            sum += 10;
+        } else {
+            sum += cards[i];
+        }
+    }
+    return sum;
 }
