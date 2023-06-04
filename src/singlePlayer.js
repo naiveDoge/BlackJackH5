@@ -2,12 +2,16 @@ import $ from 'jquery';
 import './poker.min.js';
 import 'bootstrap';
 import party from 'party-js';
+import notie from 'notie';
+import Cookies from 'js-cookie';
 
 //all cards
 var gameData = {
     'dealer': [],
     'player': []
 };
+//first run check
+firstRunCheck();
 
 $('#buttonStart').click(function(){
     $('#cardWelcome').css('display', 'none');
@@ -23,6 +27,9 @@ $('#buttonStand').click(function(){
     $('#buttonHit').prop('disabled', true);
     dealerAction();
 });
+$('#buttonRestart').click(function(){
+    location.reload();
+});
 
 //when starting a new round
 function gameInit() {
@@ -34,6 +41,7 @@ function gameInit() {
     //add a back of the card
     $('#dealersCards').append('<span id="dealersUnknownCard"></span>');
     $('#dealersUnknownCard').append(Poker.getBackCanvas(120, '#7A7BB8', '#2E319C'));
+    $('#dealersUnknownCard').animate({opacity: 1});
 
     //add player's cards
     gameData['player'] = [];
@@ -41,6 +49,9 @@ function gameInit() {
     gameData['player'].push(generateCard());
     addCardToDOM('playersCards', gameData['player'][0]);
     addCardToDOM('playersCards', gameData['player'][1]);
+
+    //set cookies
+    Cookies.set('firstRun', 'FALSE');
 }
 
 function addCardToDOM(elementID, card) {
@@ -95,11 +106,13 @@ function dealerAction() {
         }
     }
     //Finally calculate the winner
+    //Enable restart button
+    $('#buttonRestart').css('display', 'inline');
     //First see if someone busts
     if (sumForCards(gameData['dealer']) > 31) {
         if (sumForCards(gameData['player']) > 31) {
             //Tie
-            alert('tie');
+            tieAnimation()
         } else {
             //Player wins
             winnerAnimation()
@@ -108,26 +121,26 @@ function dealerAction() {
     } else if (sumForCards(gameData['dealer']) == 31) {
         if (sumForCards(gameData['player']) == 31) {
             //Tie
-            alert('tie')
+            tieAnimation()
         } else {
             //Dealer wins
-            alert('u lose')
+            loserAnimation()
         }
         return;
     } else {
         if (sumForCards(gameData['player']) > 31) {
             //Dealer wins
-            alert('u lose')
+            loserAnimation()
         } else {
             if (sumForCards(gameData['dealer']) < sumForCards(gameData['player'])) {
                 //Player wins
                 winnerAnimation()
             } else if (sumForCards(gameData['dealer']) > sumForCards(gameData['player'])) {
                 //Dealer wins
-                alert('u lose!');
+                loserAnimation()
             } else {
                 //Tie
-                alert('tie');
+                tieAnimation()
             }
         }
     }
@@ -147,9 +160,39 @@ function sumForCards(cards) {
 
 function winnerAnimation() {
     playParty();
+    notie.alert({
+        type: 1,
+        text: 'You Won!',
+        stay: true
+    });
+}
+
+function loserAnimation() {
+    notie.alert({
+        type: 2,
+        text: 'You Lost!',
+        stay: true
+    });
+}
+
+function tieAnimation() {
+    notie.alert({
+        type: 4,
+        text: 'Tie!',
+        stay: true
+    });
 }
 
 function playParty() {
     party.confetti(document.getElementById('playersCards'));
     setTimeout(playParty, 250);
+}
+
+//First run check
+function firstRunCheck() {
+    if (Cookies.get('firstRun')) {
+        $('#cardWelcome').css('display', 'none');
+        $('#cardGaming').css('display', 'block');
+        gameInit();
+    }
 }
