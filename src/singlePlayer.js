@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import './poker.min.js';
 import 'bootstrap';
+import party from 'party-js';
 
 //all cards
 var gameData = {
@@ -43,7 +44,10 @@ function gameInit() {
 }
 
 function addCardToDOM(elementID, card) {
-    $('#' + elementID).append(Poker.getCardCanvas(120, generateCardFace(), getCardFromNum(card)));
+    var randomID = Math.floor(Math.random() * (10 ** 10));
+    $('#' + elementID).append('<span id="' + randomID + '" style="opacity: 0;"></span>');
+    $('#' + randomID).append(Poker.getCardCanvas(120, generateCardFace(), getCardFromNum(card)));
+    $('#' + randomID).animate({opacity: 1});
 }
 
 
@@ -90,13 +94,42 @@ function dealerAction() {
             hitCard('dealer');
         }
     }
-    //Finally get the winner
-    if (sumForCards(gameData['dealer']) < sumForCards(gameData['player'])) {
-        alert('u win!');
-    } else if (sumForCards(gameData['dealer']) > sumForCards(gameData['player'])) {
-        alert('u lose!');
+    //Finally calculate the winner
+    //First see if someone busts
+    if (sumForCards(gameData['dealer']) > 31) {
+        if (sumForCards(gameData['player']) > 31) {
+            //Tie
+            alert('tie');
+        } else {
+            //Player wins
+            winnerAnimation()
+        }
+        return;
+    } else if (sumForCards(gameData['dealer']) == 31) {
+        if (sumForCards(gameData['player']) == 31) {
+            //Tie
+            alert('tie')
+        } else {
+            //Dealer wins
+            alert('u lose')
+        }
+        return;
     } else {
-        alert('tie');
+        if (sumForCards(gameData['player']) > 31) {
+            //Dealer wins
+            alert('u lose')
+        } else {
+            if (sumForCards(gameData['dealer']) < sumForCards(gameData['player'])) {
+                //Player wins
+                winnerAnimation()
+            } else if (sumForCards(gameData['dealer']) > sumForCards(gameData['player'])) {
+                //Dealer wins
+                alert('u lose!');
+            } else {
+                //Tie
+                alert('tie');
+            }
+        }
     }
 }
 
@@ -110,4 +143,13 @@ function sumForCards(cards) {
         }
     }
     return sum;
+}
+
+function winnerAnimation() {
+    playParty();
+}
+
+function playParty() {
+    party.confetti(document.getElementById('playersCards'));
+    setTimeout(playParty, 250);
 }
