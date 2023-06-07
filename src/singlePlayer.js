@@ -116,35 +116,43 @@ function dealerAction() {
     if (sumForCards(gameData['dealer']) > 31) {
         if (sumForCards(gameData['player']) > 31) {
             //Tie
-            tieAnimation()
+            tieAnimation();
+            putScoreToBoard('T');
         } else {
             //Player wins
-            winnerAnimation()
+            winnerAnimation();
+            putScoreToBoard('W');
         }
         return;
     } else if (sumForCards(gameData['dealer']) == 31) {
         if (sumForCards(gameData['player']) == 31) {
             //Tie
-            tieAnimation()
+            tieAnimation();
+            putScoreToBoard('T');
         } else {
             //Dealer wins
-            loserAnimation()
+            loserAnimation();
+            putScoreToBoard('L');
         }
         return;
     } else {
         if (sumForCards(gameData['player']) > 31) {
             //Dealer wins
-            loserAnimation()
+            loserAnimation();
+            putScoreToBoard('L');
         } else {
             if (sumForCards(gameData['dealer']) < sumForCards(gameData['player'])) {
                 //Player wins
-                winnerAnimation()
+                winnerAnimation();
+                putScoreToBoard('W');
             } else if (sumForCards(gameData['dealer']) > sumForCards(gameData['player'])) {
                 //Dealer wins
-                loserAnimation()
+                loserAnimation();
+                putScoreToBoard('L');
             } else {
                 //Tie
-                tieAnimation()
+                tieAnimation();
+                putScoreToBoard('T');
             }
         }
     }
@@ -199,4 +207,10 @@ function firstRunCheck() {
         $('#cardGaming').css('display', 'block');
         gameInit();
     }
+}
+
+function putScoreToBoard(type) {
+    var scoreboard = JSON.parse(Cookies.get('scoreboard'));
+    scoreboard[type]++;
+    Cookies.set('scoreboard', JSON.stringify(scoreboard));
 }
