@@ -36,7 +36,9 @@ function gameInit() {
     gameData['dealer'] = [];
     gameData['dealer'].push(generateCard());
     gameData['dealer'].push(generateCard());
+    gameData['dealer'].push(generateCard());
     addCardToDOM('dealersCards', gameData['dealer'][0]);
+    addCardToDOM('dealersCards', gameData['dealer'][1]);
     
     //add a back of the card
     $('#dealersCards').append('<span id="dealersUnknownCard"></span>');
@@ -47,8 +49,10 @@ function gameInit() {
     gameData['player'] = [];
     gameData['player'].push(generateCard());
     gameData['player'].push(generateCard());
+    gameData['player'].push(generateCard());
     addCardToDOM('playersCards', gameData['player'][0]);
     addCardToDOM('playersCards', gameData['player'][1]);
+    addCardToDOM('playersCards', gameData['player'][2]);
 
     //set cookies
     Cookies.set('firstRun', 'FALSE');
