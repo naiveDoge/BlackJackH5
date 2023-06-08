@@ -100,7 +100,7 @@ function hitCard(target) {
 function dealerAction() {
     //First remove the hidden card and add its real card
     $('#dealersUnknownCard').remove();
-    addCardToDOM('dealersCards', gameData['dealer'][1]);
+    addCardToDOM('dealersCards', gameData['dealer'][2]);
     //Then add cards for dealer
     while(true) {
         if(sumForCards(gameData['dealer']) > 26) {
@@ -109,6 +109,9 @@ function dealerAction() {
             hitCard('dealer');
         }
     }
+
+    alert('Player:'+sumForCards(gameData['player'])+'Dealer:'+sumForCards(gameData['dealer']))
+
     //Finally calculate the winner
     //Enable restart button
     $('#buttonRestart').css('display', 'inline');
