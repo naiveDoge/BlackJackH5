@@ -4,6 +4,13 @@ import Cookies from 'js-cookie';
 
 $('#navSingle').click(function(){
     $('#mainIframe').attr('src', './src/singlePlayer.html');
+    $('#navSingle').addClass('active');
+    $('#navAbout').removeClass('active');
+});
+$('#navAbout').on('click', function(){
+    $('#mainIframe').attr('src', './src/about.html');
+    $('#navAbout').addClass('active');
+    $('#navSingle').removeClass('active');
 });
 
 $('#mainIframe').on('load', function(){
