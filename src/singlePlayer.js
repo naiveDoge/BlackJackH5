@@ -109,9 +109,6 @@ function dealerAction() {
             hitCard('dealer');
         }
     }
-
-    alert('Player:'+sumForCards(gameData['player'])+'Dealer:'+sumForCards(gameData['dealer']))
-
     //Finally calculate the winner
     //Enable restart button
     $('#buttonRestart').css('display', 'inline');
